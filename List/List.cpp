@@ -12,8 +12,6 @@
 #include <stdarg.h>
 #include <cstddef>
 
-typedef char* Elem_t;
-#define Format_ "%s"
 #include "AltList.h"
 
 char* Poison = nullptr;

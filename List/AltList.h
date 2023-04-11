@@ -1,4 +1,6 @@
 #include <stdlib.h>
+typedef char* Elem_t;
+#define Format_ "%s"
 
 const char GraphFile[20] = "GraphFileAlt.txt";
 
