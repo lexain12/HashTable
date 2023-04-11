@@ -1,8 +1,10 @@
+#include <cstring>
+#include <stdio.h>
 #include <cassert>
 
 #include "HashTable.hpp"
 
-void TableCtor(HashTable_t *hashTable, size_t (*HashFunc)(char *, size_t), size_t NumOfLists)
+void TableCtor(HashTable_t *hashTable, size_t (*HashFunc)(Elem_t), size_t NumOfLists)
 {
     assert (hashTable != nullptr);
 
@@ -32,4 +34,22 @@ void TableDtor(HashTable_t* hashTable)
     free (hashTable->Table);
 }
 
+void tableAdd (HashTable_t* hashTable, Elem_t element)
+{
+    assert (hashTable != nullptr);
+    assert (element   != nullptr);
+
+    size_t ListNumber = (hashTable->HashFunc) (element) % hashTable->NumOfLists;
+    listHeadAdd(hashTable->Table[ListNumber], element);
+}
+
+ListElement* TableFind(HashTable_t* hashTable, Elem_t element)
+{
+    assert (hashTable != nullptr);
+    assert (element   != nullptr);
+
+    size_t ListNumber = (hashTable->HashFunc) (element) % hashTable->NumOfLists;
+
+    return findElementByValue(hashTable->Table[ListNumber], element);
+}
 
