@@ -3,17 +3,42 @@
 #include <cstdlib>
 #include "HashTable/HashTable.hpp"
 
+// This file must be started with space and be without \n to do this, use translator.py
+const char*  Filename     = "HamletFormated.txt";
+
 size_t fileSize (FILE* file);
-int readFile(FILE* openedFile, char** dest);
+size_t readFile(FILE* openedFile, char** dest);
+char** splitStrIntoWords (char* str, size_t strSize, char splitSymbol, size_t* retBufSize);
+void loadWordsIntoTable (char** buffer, HashTable_t* hashTable, size_t bufLength);
+void getStatistics (const char* csvFileName, HashTable_t* hashTable);
 
 int main()
 {
     HashTable_t hashTable = {};
     const size_t numberOfLists = 100;
     TableCtor (&hashTable, &Always1Hash, numberOfLists);
-    Elem_t str = "Hello";
-    tableAdd(&hashTable, str);
-    listDump(hashTable.Table[1], "Usual dump");
+
+    FILE* fileptr = fopen (Filename, "r");
+    assert (fileptr != nullptr);
+
+    char* stringOfWords  = nullptr;
+    size_t numberOfChars = readFile (fileptr, &stringOfWords);
+
+    size_t numberOfWords = 0;
+    char** listOfWords = splitStrIntoWords (stringOfWords, numberOfChars, ' ', &numberOfWords);
+
+    loadWordsIntoTable (listOfWords, &hashTable, numberOfWords);
+    getStatistics ("Stats.csv", &hashTable);
+
+    HashTable_t hashTable1 = {};
+    TableCtor (&hashTable1, &firstAsciiHash, numberOfLists);
+    loadWordsIntoTable (listOfWords, &hashTable1, numberOfWords);
+    getStatistics ("Stats.csv", &hashTable1);
+
+    HashTable_t hashTable2 = {};
+    TableCtor (&hashTable2, &strlenHash, numberOfLists);
+    loadWordsIntoTable (listOfWords, &hashTable2, numberOfWords);
+    getStatistics ("Stats.csv", &hashTable2);
 }
 
 size_t fileSize (FILE* file)
@@ -25,7 +50,7 @@ size_t fileSize (FILE* file)
     return size;
 }
 
-int readFile(FILE* openedFile, char** dest)
+size_t readFile(FILE* openedFile, char** dest)
 {
     assert (openedFile != nullptr);
 
@@ -46,22 +71,28 @@ char** splitStrIntoWords (char* str, size_t strSize, char splitSymbol, size_t* r
 {
     assert (str != nullptr);
 
-    size_t retBufSize = 100;
-    char** retBuf = (char**) calloc (retBufSize, sizeof(char*));
+    size_t maxBufSize = 100;
+    char** retBuf = (char**) calloc (maxBufSize, sizeof(char*));
     assert (retBuf != nullptr);
 
     size_t curRetBufLength = 0;
     for (size_t i = 0; i < strSize; ++i)
     {
-	if (str[i - 1] == ' ')
+	if (str[i - 1] == splitSymbol)
 	{
-	    if (curRetBufLength > retBufSize - 10 )
+	    if (curRetBufLength > maxBufSize - 10 )
 	    {
-		retBuf = (char**) realloc(retBuf, (retBufSize + 20) * sizeof (char*));
+		retBuf = (char**) realloc(retBuf, (maxBufSize + 20) * sizeof (char*));
 		assert (retBuf != nullptr);
 	    }
 
-	    retBuf[curRetBufLength] = str + i;
+	    int charsReaded = 0;
+	    sscanf (str + i, "%*s%n ", &charsReaded);
+
+	    retBuf[curRetBufLength] = (char*) calloc ((size_t) charsReaded, sizeof (char));
+	    assert (retBuf[curRetBufLength] != nullptr);
+	    sscanf (str + i, "%s ", retBuf[curRetBufLength]);
+
 	    curRetBufLength += 1;
 	}
     }
@@ -70,10 +101,25 @@ char** splitStrIntoWords (char* str, size_t strSize, char splitSymbol, size_t* r
     return retBuf;
 }
 
-void LoadWordsIntoTable (char** buffer, HashTable_t* hashTable, size_t bufLengt)
+void loadWordsIntoTable (char** buffer, HashTable_t* hashTable, size_t bufLength)
 {
-    for (size_t i = 1; i < strLength; ++i)
+    for (size_t i = 0; i < bufLength; ++i)
     {
-
+	tableAdd (hashTable, buffer[i]);
     }
 }
+
+void getStatistics (const char* csvFileName, HashTable_t* hashTable)
+{
+    FILE* fileptr = fopen (csvFileName, "a");
+    assert (fileptr != nullptr);
+
+    for (size_t i = 0; i < hashTable->NumOfLists; ++i)
+    {
+	fprintf (fileptr, "%lu ;", hashTable->Table[i]->size - 1); // -1 because list has shadow element
+    }
+    fprintf (fileptr, "\n");
+
+    fclose (fileptr);
+}
+

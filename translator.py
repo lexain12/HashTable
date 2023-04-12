@@ -1,6 +1,6 @@
 
 srcFile = open("HamletOrig.txt", "r+")
-destFile = open("HamletFormated", "w")
+destFile = open("HamletFormated.txt", "w")
 
 def deletePunctuation (str):
     returnString = ""
