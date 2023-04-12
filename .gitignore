@@ -4,3 +4,6 @@
 
 
 Objects/
+src/
+*.txt
+*.html

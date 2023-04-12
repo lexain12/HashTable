@@ -38,7 +38,7 @@ DIRFLAGS ?=
 # Configure sources you need to compile.
 SOURCES  ?= main.cpp 			\
             ./List/List.cpp             \
-	    ./HashTable/HashTable.cpp 	\
+	    ./HashTable/HashTable.cpp 	./HashTable/HashFunc.cpp \
 	    ./Logs/Loglib.cpp
 
 # Configure sources dependencies.
