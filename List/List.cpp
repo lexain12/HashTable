@@ -85,7 +85,6 @@ ListElement* listInsertPrev (List_t* list, ListElement* anchorElement, Elem_t el
     anchorElement->prevElementInd = newListElement;
 
     list->size += 1;
-    printf("%lu\n", list->size);
 
     return newListElement;
 }
