@@ -26,4 +26,5 @@ unsigned int myRol(unsigned int num, unsigned int shift);
 size_t myRor(size_t num, size_t shift);
 size_t rorHash (Elem_t element);
 size_t rolHash (Elem_t element);
+size_t crc_32 (Elem_t element);
 // -------- end of hash functions -----------

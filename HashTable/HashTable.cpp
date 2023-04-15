@@ -49,6 +49,8 @@ ListElement* TableFind(HashTable_t* hashTable, Elem_t element)
     assert (element   != nullptr);
 
     size_t ListNumber = (hashTable->HashFunc) (element) % hashTable->NumOfLists;
+    fprintf (stderr, "Finding in list %lu\n", ListNumber);
+    fprintf (stderr, "List length %lu \n", hashTable->Table[ListNumber]->size);
 
     return findElementByValue(hashTable->Table[ListNumber], element);
 }

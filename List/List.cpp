@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <cstddef>
+#include <cstring>
 
 #include "AltList.h"
 
@@ -331,11 +332,25 @@ ListElement* findElementByValue (List_t* list, Elem_t value)
 
     ListElement* curElement = list->nullElement->nextElementInd;
 
-    while (curElement->element != value)
+    size_t i = 0;
+    listDump (list, "MAnual\n");
+    for (; i < list->size - 2;)
     {
-        curElement = curElement->nextElementInd;
+	curElement = curElement->nextElementInd;
+	if (strcmp (curElement->element, value) == 0)
+	{
+	    fprintf (stderr, "Element found\n");
+	    break;
+	}
+
+	i++;
     }
-    
+
+    if (i == list->size - 2)
+    {
+	fprintf (stderr, "No such element in this list\n");
+    }
+
     if (list->status |= listVerify (list))
     {
         listDump (list, "Error after findElementByValue function, value " Format_ "\n", value);

@@ -49,6 +49,15 @@ int main()
     TableCtor (&hashTable4, &asciiSumHash, numberOfLists);
     loadWordsIntoTable (listOfWords, &hashTable4, numberOfWords);
     getStatistics ("Stats.csv", &hashTable4);
+
+    HashTable_t hashTable5 = {};
+    TableCtor (&hashTable5, &crc_32, numberOfLists);
+    loadWordsIntoTable (listOfWords, &hashTable5, numberOfWords);
+    getStatistics ("Stats.csv", &hashTable5);
+
+    fprintf (stderr, "Start finding\n");
+    ListElement* str = TableFind (&hashTable2, "AHHHHHHHHHHHHH");
+    printf ("%s\n", str->element);
 }
 
 size_t fileSize (FILE* file)
