@@ -25,15 +25,15 @@ CXXFLAGS ?= -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ 				   \
 			-fno-omit-frame-pointer -fPIE 	   \
 
 # Configure linker flags.
-LINKFLAGS ?= 
+LINKFLAGS ?=
 
 # Configure program perfomance boost flags.
-FASTFLAGS ?= 
+FASTFLAGS ?=
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Configure directory flags.
-DIRFLAGS ?= 
+DIRFLAGS ?=
 
 # Configure sources you need to compile.
 SOURCES  ?= main.cpp 			\
@@ -62,7 +62,7 @@ EXECUTABLE ?= main
 # WARNING: Don't change values and commands below.
 
 # Making objects names from sources names.
-OBJECTS = $(patsubst %.cpp, $(OBJDIR)%.o, $(SOURCES)) 
+OBJECTS = $(patsubst %.cpp, $(OBJDIR)%.o, $(SOURCES))
 
 # Adding directory flags to compiler flags.
 CXXFLAGS += $(DIRFLAGS)

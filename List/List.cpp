@@ -1,6 +1,7 @@
 //--------------------------------------------------------
-// This file is my old code, that had a lot of warnings, 
-// but I checked them 
+// This file is my old code, that had a lot of warnings,
+// but I checked them
+#include <cstdlib>
 #pragma GCC diagnostic ignored "-Wsign-conversion"
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
 #pragma GCC diagnostic ignored "-Wparentheses"
@@ -132,7 +133,7 @@ void myGraph (List_t* list)
     dumpprint ("    node [color=black, shape=box, style=\"rounded, filled\"];\n")
     dumpprint ("    rankdir=LR;\n")
     dumpprint ("    size [fillcolor=\"#74c2f2\", label=\"size = %lu\"];\n", list->size)
-    
+
     dumpprint ("    node[color=black, shape=record, style=\"rounded, filled\"];\n")
     dumpprint ("    edge[style = invis, constraint=true];\n")
 
@@ -155,7 +156,7 @@ void myGraph (List_t* list)
         else if (curElement == list->nullElement->prevElementInd)
             dumpprint ("fillcolor =\"#fc8b00\", label =\"node %p | value:" Format_ , curElement, curElement->element)
 
-        else 
+        else
         {
             dumpprint ("fillcolor =\"#f280f0\", label =\"node %p | value:" Format_ , curElement, curElement->element)
         }
@@ -164,7 +165,7 @@ void myGraph (List_t* list)
 
         curElement = curElement->nextElementInd;
     }
-    
+
     dumpprint("    edge [style=solid, constraint=false];\n")
 
         curElement = list->nullElement;
@@ -199,7 +200,7 @@ void listDump (List_t* list, const char* str, ...)
 {
     assert(list != nullptr);
 
-    va_list argPtr = nullptr;
+    va_list argPtr = {};
     va_start (argPtr, str);
 
     fprintf(LOGFILEPTR, "<hr>\n");
@@ -209,7 +210,7 @@ void listDump (List_t* list, const char* str, ...)
     fprintf (LOGFILEPTR, "</h2>\n");
 
     fprintf (LOGFILEPTR, "<h2>Status:</h2>\n");
-    
+
 if (list->status)
     {
         fprintf(LOGFILEPTR, "<h2>(ERROR: %d)</h2>\n", list->status);
@@ -233,7 +234,7 @@ if (list->status)
     }
     else
         fprintf(LOGFILEPTR, "<h2> (no errors) </h2>\n");
-    
+
     myGraph (list);
     static int picVersion = 0;
     fprintf(LOGFILEPTR, "<img src = \"src/pic%d.svg\"/>\n", picVersion++);
@@ -272,7 +273,7 @@ void listDelete (List_t* list, ListElement* anchorElement)
         listDump (list, "Error after listDelete function, delete %lu element \n", anchorElement);
     }
 
-    return;    
+    return;
 }
 
 int listVerify (List_t* list)
@@ -312,7 +313,7 @@ size_t logicalNumberToPhysical (List_t* list, ListElement* anchorElement)
         curElement = curElement->nextElementInd;
         index++;
     }
-    
+
     if (list->status |= listVerify (list))
     {
         listDump (list, "Error after logicalNumberToPhysical function, logicalNumber %lu\n", anchorElement);
@@ -325,36 +326,37 @@ ListElement* findElementByValue (List_t* list, Elem_t value)
 {
     assert (list != nullptr);
 
-    if (list->status |= listVerify (list))
-    {
-        listDump (list, "Error in findElementByValue function, value " Format_ "\n", value);
-    }
+//    if (list->status |= listVerify (list))
+//    {
+//        listDump (list, "Error in findElementByValue function, value " Format_ "\n", value);
+//        exit(1);
+//    }
 
     ListElement* curElement = list->nullElement->nextElementInd;
 
     size_t i = 0;
-    listDump (list, "MAnual\n");
     for (; i < list->size - 2;)
     {
-	curElement = curElement->nextElementInd;
-	if (strcmp (curElement->element, value) == 0)
-	{
-	    fprintf (stderr, "Element found\n");
-	    break;
-	}
+        curElement = curElement->nextElementInd;
+        if (strcmp (curElement->element, value) == 0)
+        {
+            //fprintf (stderr, "Element found\n");
+            break;
+        }
 
 	i++;
     }
 
     if (i == list->size - 2)
     {
-	fprintf (stderr, "No such element in this list\n");
+	   // fprintf (stderr, "No such element in this list\n");
     }
 
-    if (list->status |= listVerify (list))
-    {
-        listDump (list, "Error after findElementByValue function, value " Format_ "\n", value);
-    }
+//    if (list->status |= listVerify (list))
+//    {
+//        listDump (list, "Error after findElementByValue function, value " Format_ "\n", value);
+//        exit(1);
+//    }
 
     return curElement;
 }

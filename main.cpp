@@ -11,13 +11,10 @@ size_t readFile(FILE* openedFile, char** dest);
 char** splitStrIntoWords (char* str, size_t strSize, char splitSymbol, size_t* retBufSize);
 void loadWordsIntoTable (char** buffer, HashTable_t* hashTable, size_t bufLength);
 void getStatistics (const char* csvFileName, HashTable_t* hashTable);
+void makeCsvFile (char** listOfWords, size_t numberOfWords);
 
 int main()
 {
-    HashTable_t hashTable = {};
-    const size_t numberOfLists = 100;
-    TableCtor (&hashTable, &Always1Hash, numberOfLists);
-
     FILE* fileptr = fopen (Filename, "r");
     assert (fileptr != nullptr);
 
@@ -26,6 +23,29 @@ int main()
 
     size_t numberOfWords = 0;
     char** listOfWords = splitStrIntoWords (stringOfWords, numberOfChars, ' ', &numberOfWords);
+
+    HashTable_t hashTable = {};
+    const size_t numberOfLists = 100;
+    TableCtor(&hashTable, &crc_32, numberOfLists);
+    loadWordsIntoTable(listOfWords, &hashTable, numberOfWords);
+
+    for (size_t j = 0; j < 1000; j++)
+    {
+        for (size_t i = 0; i < numberOfWords; i++)
+        {
+            TableFind(&hashTable, listOfWords[i]);
+        }
+    }
+
+    //makeCsvFile(listOfWords, numberOfWords);
+}
+
+void makeCsvFile (char** listOfWords, size_t numberOfWords)
+{
+    HashTable_t hashTable = {};
+    const size_t numberOfLists = 100;
+    TableCtor (&hashTable, &Always1Hash, numberOfLists);
+
 
     loadWordsIntoTable (listOfWords, &hashTable, numberOfWords);
     getStatistics ("Stats.csv", &hashTable);
@@ -54,16 +74,12 @@ int main()
     TableCtor (&hashTable5, &crc_32, numberOfLists);
     loadWordsIntoTable (listOfWords, &hashTable5, numberOfWords);
     getStatistics ("Stats.csv", &hashTable5);
-
-    fprintf (stderr, "Start finding\n");
-    ListElement* str = TableFind (&hashTable2, "AHHHHHHHHHHHHH");
-    printf ("%s\n", str->element);
 }
 
 size_t fileSize (FILE* file)
 {
-    fseek(file, 0l, SEEK_END); 
-    size_t size = (size_t) ftell(file); 
+    fseek(file, 0l, SEEK_END);
+    size_t size = (size_t) ftell(file);
     fseek(file, 0l, SEEK_SET);
 
     return size;
@@ -79,10 +95,10 @@ size_t readFile(FILE* openedFile, char** dest)
 
     *dest = (char*) calloc(numberOfChars + 1, sizeof(char));
 
-    size_t charsReaded = fread((void*) *dest, sizeof(char), numberOfChars, openedFile); // 
+    size_t charsReaded = fread((void*) *dest, sizeof(char), numberOfChars, openedFile); //
     if (charsReaded != numberOfChars)
         return 1;
-    
+
     return numberOfChars;
 }
 
@@ -101,8 +117,9 @@ char** splitStrIntoWords (char* str, size_t strSize, char splitSymbol, size_t* r
 	{
 	    if (curRetBufLength > maxBufSize - 10 )
 	    {
-		retBuf = (char**) realloc(retBuf, (maxBufSize + 20) * sizeof (char*));
-		assert (retBuf != nullptr);
+            maxBufSize += 20;
+            retBuf = (char**) realloc(retBuf, (maxBufSize) * sizeof (char*));
+            assert (retBuf != nullptr);
 	    }
 
 	    int charsReaded = 0;
@@ -135,7 +152,7 @@ void getStatistics (const char* csvFileName, HashTable_t* hashTable)
 
     for (size_t i = 0; i < hashTable->NumOfLists; ++i)
     {
-	fprintf (fileptr, "%lu ;", hashTable->Table[i]->size - 1); // -1 because list has shadow element
+	    fprintf (fileptr, "here %lu ;", hashTable->Table[i]->size - 1); // -1 because list has shadow element
     }
     fprintf (fileptr, "\n");
 
