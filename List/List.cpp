@@ -13,6 +13,8 @@
 #include <stdarg.h>
 #include <cstddef>
 #include <cstring>
+#include <immintrin.h>
+#include <emmintrin.h>
 
 #include "AltList.h"
 
@@ -322,7 +324,21 @@ size_t logicalNumberToPhysical (List_t* list, ListElement* anchorElement)
     return index;
 }
 
+int fastStrCmp(const char* str1, const char* str2)
+{
 
+    const int EqualConst = 0xFFFF;
+    __m128i Str1 = _mm_loadu_si64 ((void const*) str1);
+    __m128i Str2 = _mm_loadu_si64 ((void const*) str2);
+
+
+    __m128i result = _mm_cmpeq_epi32 (Str1, Str2);
+
+    if (_mm_movemask_epi8 (result) == EqualConst)
+        return 0;
+
+    return 1;
+}
 
 ListElement* findElementByValue (List_t* list, Elem_t value)
 {
@@ -340,9 +356,9 @@ ListElement* findElementByValue (List_t* list, Elem_t value)
     for (; i < list->size - 2;)
     {
         curElement = curElement->nextElementInd;
-        if (strcmp (curElement->element, value) == 0)
+        if (fastStrCmp(curElement->element, value) == 0)
         {
-            //fprintf (stderr, "Element found\n");
+ //           fprintf (stderr, "Element found\n");
             break;
         }
 
@@ -351,7 +367,7 @@ ListElement* findElementByValue (List_t* list, Elem_t value)
 
     if (i == list->size - 2)
     {
-	   // fprintf (stderr, "No such element in this list\n");
+//	    fprintf (stderr, "No such element in this list\n");
     }
 
 //    if (list->status |= listVerify (list))

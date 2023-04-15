@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <cstdio>
 #include <cassert>
 #include <cstdlib>
@@ -37,7 +38,7 @@ int main()
         }
     }
 
-    //makeCsvFile(listOfWords, numberOfWords);
+//    makeCsvFile(listOfWords, numberOfWords);
 }
 
 void makeCsvFile (char** listOfWords, size_t numberOfWords)
@@ -105,6 +106,7 @@ size_t readFile(FILE* openedFile, char** dest)
 char** splitStrIntoWords (char* str, size_t strSize, char splitSymbol, size_t* retBufSize)
 {
     assert (str != nullptr);
+    const size_t constStrLength = 16;
 
     size_t maxBufSize = 100;
     char** retBuf = (char**) calloc (maxBufSize, sizeof(char*));
@@ -122,10 +124,7 @@ char** splitStrIntoWords (char* str, size_t strSize, char splitSymbol, size_t* r
             assert (retBuf != nullptr);
 	    }
 
-	    int charsReaded = 0;
-	    sscanf (str + i, "%*s%n ", &charsReaded);
-
-	    retBuf[curRetBufLength] = (char*) calloc ((size_t) charsReaded, sizeof (char));
+	    retBuf[curRetBufLength] = (char*) calloc (constStrLength + 1, sizeof (char)); // + 1 is space for '\0'
 	    assert (retBuf[curRetBufLength] != nullptr);
 	    sscanf (str + i, "%s ", retBuf[curRetBufLength]);
 
@@ -152,7 +151,7 @@ void getStatistics (const char* csvFileName, HashTable_t* hashTable)
 
     for (size_t i = 0; i < hashTable->NumOfLists; ++i)
     {
-	    fprintf (fileptr, "here %lu ;", hashTable->Table[i]->size - 1); // -1 because list has shadow element
+	    fprintf (fileptr, "%lu ;", hashTable->Table[i]->size - 1); // -1 because list has shadow element
     }
     fprintf (fileptr, "\n");
 
