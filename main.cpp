@@ -39,6 +39,16 @@ int main()
     TableCtor (&hashTable2, &strlenHash, numberOfLists);
     loadWordsIntoTable (listOfWords, &hashTable2, numberOfWords);
     getStatistics ("Stats.csv", &hashTable2);
+
+    HashTable_t hashTable3 = {};
+    TableCtor (&hashTable3, &rolHash, numberOfLists);
+    loadWordsIntoTable (listOfWords, &hashTable3, numberOfWords);
+    getStatistics ("Stats.csv", &hashTable3);
+
+    HashTable_t hashTable4 = {};
+    TableCtor (&hashTable4, &asciiSumHash, numberOfLists);
+    loadWordsIntoTable (listOfWords, &hashTable4, numberOfWords);
+    getStatistics ("Stats.csv", &hashTable4);
 }
 
 size_t fileSize (FILE* file)

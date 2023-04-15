@@ -21,4 +21,9 @@ void TableClear  ();
 size_t Always1Hash    (Elem_t element);
 size_t firstAsciiHash (Elem_t element);
 size_t strlenHash     (Elem_t element);
+size_t asciiSumHash   (Elem_t element);
+unsigned int myRol(unsigned int num, unsigned int shift);
+size_t myRor(size_t num, size_t shift);
+size_t rorHash (Elem_t element);
+size_t rolHash (Elem_t element);
 // -------- end of hash functions -----------
