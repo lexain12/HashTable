@@ -16,8 +16,9 @@ words = set()
 for line in srcFile:
     wordList = line.split()
     for word in wordList:
-        if word not in words:
-            words.add (word)
-            destFile.write (deletePunctuation (word))
-            destFile.write (" ")
+        if len(word) <= 16:
+            if word not in words:
+                words.add (word)
+                destFile.write (deletePunctuation (word))
+                destFile.write (" ")
 
