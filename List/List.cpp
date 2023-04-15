@@ -322,6 +322,8 @@ size_t logicalNumberToPhysical (List_t* list, ListElement* anchorElement)
     return index;
 }
 
+
+
 ListElement* findElementByValue (List_t* list, Elem_t value)
 {
     assert (list != nullptr);

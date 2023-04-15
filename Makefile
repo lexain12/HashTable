@@ -28,7 +28,7 @@ CXXFLAGS ?= -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ 				   \
 LINKFLAGS ?=
 
 # Configure program perfomance boost flags.
-FASTFLAGS ?=
+FASTFLAGS ?= -O1
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
