@@ -8,6 +8,8 @@ void TableCtor(HashTable_t *hashTable, size_t (*HashFunc)(Elem_t), size_t NumOfL
 {
     assert (hashTable != nullptr);
 
+
+
     hashTable->NumOfLists = NumOfLists;
     hashTable->HashFunc   = HashFunc;
     hashTable->Table      = (List_t**) calloc(NumOfLists, sizeof(List_t*));
@@ -48,7 +50,11 @@ ListElement* TableFind(HashTable_t* hashTable, Elem_t element)
     assert (hashTable != nullptr);
     assert (element   != nullptr);
 
-    size_t ListNumber = (hashTable->HashFunc) (element) % hashTable->NumOfLists;
+    size_t ListNumber = 0;
+    for (int i = 0; i < 10; i++)
+    {
+        ListNumber = (hashTable->HashFunc) (element) % hashTable->NumOfLists;
+    }
 
     return findElementByValue(hashTable->Table[ListNumber], element);
 }

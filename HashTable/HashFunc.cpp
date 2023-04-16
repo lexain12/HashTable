@@ -110,7 +110,7 @@ size_t crc_32 (Elem_t element)
 
     uint32_t crc_32 = crc_32_magic_const;
 
-	for (size_t i = 0; i < len; i++)
+	for (size_t i = 0; i < 16; i++)
     {
         uint32_t lookup_i = (uint8_t)crc_32 ^ udata[i];
         crc_32 = (crc_32 >> 8) ^ crc_lookup_table[lookup_i];
@@ -119,4 +119,22 @@ size_t crc_32 (Elem_t element)
     crc_32 ^= crc_32_magic_const;
 
     return crc_32;
+}
+
+size_t crc_32Fast (Elem_t element)
+{
+    uint32_t hash = 0;
+
+    __asm__(
+        "or $0xFFFFFFFFFFFFFFFF, %%rax\n\t"
+        "crc32q (%1),     %%rax\n\t"
+        "crc32q 0x08(%1), %%rax\n\t"
+        "not %%rax\n\t"
+        "movl %%eax, %0\n\t"
+        :"=r"(hash)
+        :"r"(element)
+        :"%rax"
+    );
+
+    return hash;
 }

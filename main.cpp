@@ -16,6 +16,7 @@ void makeCsvFile (char** listOfWords, size_t numberOfWords);
 
 int main()
 {
+
     FILE* fileptr = fopen (Filename, "r");
     assert (fileptr != nullptr);
 
@@ -30,29 +31,28 @@ int main()
     TableCtor(&hashTable, &crc_32, numberOfLists);
     loadWordsIntoTable(listOfWords, &hashTable, numberOfWords);
 
-    for (size_t j = 0; j < 1000; j++)
-    {
-        for (size_t i = 0; i < numberOfWords; i++)
-        {
-            TableFind(&hashTable, listOfWords[i]);
-        }
-    }
+//    for (size_t j = 0; j < 100; j++)
+//    {
+//        for (size_t i = 0; i < numberOfWords; i++)
+//        {
+//            TableFind(&hashTable, listOfWords[i]);
+//        }
+//    }
 
-//    makeCsvFile(listOfWords, numberOfWords);
+    makeCsvFile(listOfWords, numberOfWords);
 }
 
 void makeCsvFile (char** listOfWords, size_t numberOfWords)
 {
-    HashTable_t hashTable = {};
     const size_t numberOfLists = 100;
-    TableCtor (&hashTable, &Always1Hash, numberOfLists);
 
-
+    HashTable_t hashTable = {};
+    TableCtor (&hashTable, &crc_32Fast, numberOfLists);
     loadWordsIntoTable (listOfWords, &hashTable, numberOfWords);
     getStatistics ("Stats.csv", &hashTable);
 
     HashTable_t hashTable1 = {};
-    TableCtor (&hashTable1, &firstAsciiHash, numberOfLists);
+    TableCtor (&hashTable1, &crc_32, numberOfLists);
     loadWordsIntoTable (listOfWords, &hashTable1, numberOfWords);
     getStatistics ("Stats.csv", &hashTable1);
 

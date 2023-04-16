@@ -33,7 +33,7 @@ int listCtor (List_t* list)
         return errors |= listptrError;
 
     list->nullElement = newDataPtr;
-    list->size        = 1;
+    list->size        = 0;
     list->status      = noErrors;
 
     list->nullElement->element = Poison;
@@ -59,7 +59,6 @@ void listDtor (List_t* list)
     list->nullElement->nextElementInd = 0;
 
     free(list->nullElement);
-    list->nullElement = nullptr;
 
     return;
 }
