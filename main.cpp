@@ -5,7 +5,7 @@
 #include "HashTable/HashTable.hpp"
 
 // This file must be started with space and be without \n to do this, use translator.py
-const char*  Filename     = "HamletFormated.txt";
+const char*  Filename = "HamletFormated.txt";
 
 size_t fileSize (FILE* file);
 size_t readFile(FILE* openedFile, char** dest);
@@ -28,18 +28,17 @@ int main()
 
     HashTable_t hashTable = {};
     const size_t numberOfLists = 100;
-    TableCtor(&hashTable, &crc_32, numberOfLists);
+    TableCtor(&hashTable, &crc_32Fast, numberOfLists);
     loadWordsIntoTable(listOfWords, &hashTable, numberOfWords);
 
-//    for (size_t j = 0; j < 100; j++)
-//    {
-//        for (size_t i = 0; i < numberOfWords; i++)
-//        {
-//            TableFind(&hashTable, listOfWords[i]);
-//        }
-//    }
+    for (size_t j = 0; j < 1000; j++)
+    {
+        for (size_t i = 0; i < numberOfWords; i++)
+        {
+            TableFind(&hashTable, listOfWords[i]);
+        }
+    }
 
-    makeCsvFile(listOfWords, numberOfWords);
 }
 
 void makeCsvFile (char** listOfWords, size_t numberOfWords)

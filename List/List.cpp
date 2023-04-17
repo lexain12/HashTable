@@ -342,12 +342,6 @@ ListElement* findElementByValue (List_t* list, Elem_t value)
 {
     assert (list != nullptr);
 
-//    if (list->status |= listVerify (list))
-//    {
-//        listDump (list, "Error in findElementByValue function, value " Format_ "\n", value);
-//        exit(1);
-//    }
-
     ListElement* curElement = list->nullElement->nextElementInd;
 
     size_t i = 0;
@@ -356,7 +350,6 @@ ListElement* findElementByValue (List_t* list, Elem_t value)
         curElement = curElement->nextElementInd;
         if (fastStrCmp(curElement->element, value) == 0)
         {
- //           fprintf (stderr, "Element found\n");
             break;
         }
 
@@ -365,14 +358,8 @@ ListElement* findElementByValue (List_t* list, Elem_t value)
 
     if (i == list->size - 2)
     {
-//	    fprintf (stderr, "No such element in this list\n");
+        return nullptr;
     }
-
-//    if (list->status |= listVerify (list))
-//    {
-//        listDump (list, "Error after findElementByValue function, value " Format_ "\n", value);
-//        exit(1);
-//    }
 
     return curElement;
 }

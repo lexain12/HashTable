@@ -51,10 +51,7 @@ ListElement* TableFind(HashTable_t* hashTable, Elem_t element)
     assert (element   != nullptr);
 
     size_t ListNumber = 0;
-    for (int i = 0; i < 10; i++)
-    {
-        ListNumber = (hashTable->HashFunc) (element) % hashTable->NumOfLists;
-    }
+    ListNumber = (hashTable->HashFunc) (element) % hashTable->NumOfLists;
 
     return findElementByValue(hashTable->Table[ListNumber], element);
 }
