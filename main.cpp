@@ -16,7 +16,6 @@ void makeCsvFile (char** listOfWords, size_t numberOfWords);
 
 int main()
 {
-
     FILE* fileptr = fopen (Filename, "r");
     assert (fileptr != nullptr);
 
@@ -90,8 +89,6 @@ size_t readFile(FILE* openedFile, char** dest)
     assert (openedFile != nullptr);
 
     size_t numberOfChars = fileSize(openedFile);
-
-    printf("filesize = %lu\n", numberOfChars);
 
     *dest = (char*) calloc(numberOfChars + 1, sizeof(char));
 

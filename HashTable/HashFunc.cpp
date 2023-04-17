@@ -106,7 +106,6 @@ size_t crc_32 (Elem_t element)
     const uint32_t crc_32_magic_const = 0xFFFFFFFFU;
 
     const uint8_t *udata = (uint8_t *)element;
-    const size_t len = strlen (element);
 
     uint32_t crc_32 = crc_32_magic_const;
 
