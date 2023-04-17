@@ -325,11 +325,9 @@ size_t logicalNumberToPhysical (List_t* list, ListElement* anchorElement)
 
 int fastStrCmp(const char* str1, const char* str2)
 {
-
     const int EqualConst = 0xFFFF;
     __m128i Str1 = _mm_loadu_si64 ((void const*) str1);
     __m128i Str2 = _mm_loadu_si64 ((void const*) str2);
-
 
     __m128i result = _mm_cmpeq_epi32 (Str1, Str2);
 
