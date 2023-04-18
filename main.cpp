@@ -26,7 +26,7 @@ int main()
     char** listOfWords = splitStrIntoWords (stringOfWords, numberOfChars, ' ', &numberOfWords);
 
     HashTable_t hashTable = {};
-    const size_t numberOfLists = 100;
+    const size_t numberOfLists = 1000;
     TableCtor(&hashTable, &crc_32Fast, numberOfLists);
     loadWordsIntoTable(listOfWords, &hashTable, numberOfWords);
 
@@ -42,7 +42,7 @@ int main()
 
 void makeCsvFile (char** listOfWords, size_t numberOfWords)
 {
-    const size_t numberOfLists = 100;
+    const size_t numberOfLists = 1000;
 
     HashTable_t hashTable = {};
     TableCtor (&hashTable, &crc_32Fast, numberOfLists);
@@ -109,7 +109,7 @@ char** splitStrIntoWords (char* str, size_t strSize, char splitSymbol, size_t* r
     assert (retBuf != nullptr);
 
     size_t curRetBufLength = 0;
-    for (size_t i = 0; i < strSize; ++i)
+    for (size_t i = 1; i < strSize; ++i)
     {
 	if (str[i - 1] == splitSymbol)
 	{

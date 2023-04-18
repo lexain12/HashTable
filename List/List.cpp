@@ -326,6 +326,8 @@ int fastStrCmp(const char* str1, const char* str2)
 {
 
     const int EqualConst = 0xFFFF;
+    assert (str1 != nullptr);
+    assert (str2 != nullptr);
     __m128i Str1 = _mm_loadu_si64 ((void const*) str1);
     __m128i Str2 = _mm_loadu_si64 ((void const*) str2);
 
@@ -345,7 +347,7 @@ ListElement* findElementByValue (List_t* list, Elem_t value)
     ListElement* curElement = list->nullElement->nextElementInd;
 
     size_t i = 0;
-    for (; i < list->size - 2;)
+    for (; i < list->size - 1;)
     {
         curElement = curElement->nextElementInd;
         if (fastStrCmp(curElement->element, value) == 0)

@@ -13,12 +13,14 @@ void TableCtor(HashTable_t *hashTable, size_t (*HashFunc)(Elem_t), size_t NumOfL
     hashTable->NumOfLists = NumOfLists;
     hashTable->HashFunc   = HashFunc;
     hashTable->Table      = (List_t**) calloc(NumOfLists, sizeof(List_t*));
+    assert(hashTable->Table != nullptr);
 
     for (size_t i = 0; i < NumOfLists; ++i)
     {
-	List_t* list = (List_t*) calloc(1, sizeof(*list));
-	listCtor(list);
-	hashTable->Table[i] = list;
+        List_t* list = (List_t*) calloc(1, sizeof(*list));
+        assert(list != nullptr);
+        listCtor(list);
+        hashTable->Table[i] = list;
     }
 }
 
@@ -28,7 +30,7 @@ void TableDtor(HashTable_t* hashTable)
 
     for (size_t i = 0; i < hashTable->NumOfLists; ++i)
     {
-	listDtor (hashTable->Table[i]);
+        listDtor (hashTable->Table[i]);
     }
 
     hashTable->NumOfLists = 0;
