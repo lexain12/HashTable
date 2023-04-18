@@ -31,7 +31,7 @@ int listCtor (List_t* list)
         return errors |= listptrError;
 
     list->nullElement = newDataPtr;
-    list->size        = 1;
+    list->size        = 0;
     list->status      = noErrors;
 
     list->nullElement->element = Poison;
@@ -336,7 +336,7 @@ ListElement* findElementByValue (List_t* list, Elem_t value)
     ListElement* curElement = list->nullElement->nextElementInd;
 
     size_t i = 0;
-    for (; i < list->size - 2;)
+    for ( ; i < list->size - 1;)
     {
         curElement = curElement->nextElementInd;
         if (strcmp (curElement->element, value) == 0)

@@ -4,7 +4,7 @@ CXX ?= g++
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Configure compile flags.
-CXXFLAGS ?= -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ 				   \
+CXXFLAGS ?= -ggdb3 -std=c++17 -Wall -Wextra -Weffc++ 				   \
 			-Wc++14-compat 				   \
 			-Wmissing-declarations -Wcast-align -Wcast-qual 			   \
 			-Wchar-subscripts \
@@ -28,7 +28,7 @@ CXXFLAGS ?= -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ 				   \
 LINKFLAGS ?=
 
 # Configure program perfomance boost flags.
-FASTFLAGS ?= -O1
+FASTFLAGS ?= -Ofast
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
