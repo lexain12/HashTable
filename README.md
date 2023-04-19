@@ -217,7 +217,7 @@ size_t crc_32Fast (Elem_t element)
 |---------------------------|------------|-------
 | Not optimized             |2 215 470 092 | 2.15
 | Optimization 1            | 1 700 000 000 | 1.98
-| Optimization 2            | 738 351 687 | 1.65
+| Optimization 2            | 738 351 687 | 1.60
 
 
 ## Оптимизация III
