@@ -30,7 +30,11 @@ int main()
     TableCtor(&hashTable, &crc_32Fast, numberOfLists);
     loadWordsIntoTable(listOfWords, &hashTable, numberOfWords);
 
-    for (size_t j = 0; j < 1000; j++)
+    //makeCsvFile (listOfWords, numberOfWords);
+
+#if 1
+    const int numberOfTests = 1000;
+    for (size_t j = 0; j < numberOfTests; j++)
     {
         for (size_t i = 0; i < numberOfWords; i++)
         {
@@ -38,6 +42,7 @@ int main()
         }
     }
 
+#endif
 }
 
 void makeCsvFile (char** listOfWords, size_t numberOfWords)
@@ -45,12 +50,12 @@ void makeCsvFile (char** listOfWords, size_t numberOfWords)
     const size_t numberOfLists = 1000;
 
     HashTable_t hashTable = {};
-    TableCtor (&hashTable, &crc_32Fast, numberOfLists);
+    TableCtor (&hashTable, &Always1Hash, numberOfLists);
     loadWordsIntoTable (listOfWords, &hashTable, numberOfWords);
     getStatistics ("Stats.csv", &hashTable);
 
     HashTable_t hashTable1 = {};
-    TableCtor (&hashTable1, &crc_32, numberOfLists);
+    TableCtor (&hashTable1, &firstAsciiHash, numberOfLists);
     loadWordsIntoTable (listOfWords, &hashTable1, numberOfWords);
     getStatistics ("Stats.csv", &hashTable1);
 
@@ -147,7 +152,13 @@ void getStatistics (const char* csvFileName, HashTable_t* hashTable)
 
     for (size_t i = 0; i < hashTable->NumOfLists; ++i)
     {
-	    fprintf (fileptr, "%lu ;", hashTable->Table[i]->size - 1); // -1 because list has shadow element
+	    fprintf (fileptr, "%lu ;", i);
+    }
+    fprintf (fileptr, "\n");
+
+    for (size_t i = 0; i < hashTable->NumOfLists; ++i)
+    {
+	    fprintf (fileptr, "%lu ;", hashTable->Table[i]->size);
     }
     fprintf (fileptr, "\n");
 
