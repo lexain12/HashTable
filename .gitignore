@@ -4,7 +4,7 @@
 
 
 Objects/
-src/
 *.txt
 *.html
 *.csv
+*.svg
