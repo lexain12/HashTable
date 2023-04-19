@@ -28,7 +28,7 @@ CXXFLAGS ?= -ggdb3 -std=c++17 -Wall -Wextra -Weffc++ 				   \
 LINKFLAGS ?=
 
 # Configure program perfomance boost flags.
-FASTFLAGS ?= -Ofast
+FASTFLAGS ?= -Ofast -DNODEBUG
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -68,14 +68,19 @@ OBJECTS = $(patsubst %.cpp, $(OBJDIR)%.o, $(SOURCES))
 CXXFLAGS += $(DIRFLAGS)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 .PHONY: all
 all: $(EXECUTABLE)
 
-$(EXECUTABLE): $(OBJECTS) $(DEPENDS)
+$(EXECUTABLE): $(OBJECTS) $(DEPENDS) myFunction
 	@echo "Making executable from objects;"
-	@$(CXX) $(OBJECTS) -o $@ $(LINKFLAGS)
+	$(CXX) $(OBJECTS) Objects/myFunction.o -o $@ $(LINKFLAGS)
 	@echo "Done;"
+
+
+
+myFunction: myFunction.s
+	@echo "compiling myFunction;"
+	@nasm -f elf64 myFunction.s -o ./Objects/myFunction.o
 
 $(OBJDIR)%.o: %.cpp
 	@mkdir -p $(@D)

@@ -1,6 +1,8 @@
 #include <cstring>
 #include <stdio.h>
 #include <cassert>
+#include <immintrin.h>
+#include <emmintrin.h>
 
 #include "HashTable.hpp"
 
@@ -55,6 +57,7 @@ ListElement* TableFind(HashTable_t* hashTable, Elem_t element)
     size_t ListNumber = 0;
     ListNumber = (hashTable->HashFunc) (element) % hashTable->NumOfLists;
 
-    return findElementByValue(hashTable->Table[ListNumber], element);
+    ListElement* retValue = findElementByValue(hashTable->Table[ListNumber], element);
+    return retValue;
 }
 
