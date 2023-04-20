@@ -25,7 +25,7 @@ int main()
     char** listOfWords = splitStrIntoWords (stringOfWords, numberOfChars, ' ', &numberOfWords);
 
     HashTable_t hashTable = {};
-    const size_t numberOfLists = 1000;
+    const size_t numberOfLists = 80009;
     TableCtor(&hashTable, &crc_32, numberOfLists);
     loadWordsIntoTable(listOfWords, &hashTable, numberOfWords);
 
