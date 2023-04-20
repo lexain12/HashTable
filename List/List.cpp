@@ -324,16 +324,16 @@ size_t logicalNumberToPhysical (List_t* list, ListElement* anchorElement)
 
 int fastStrCmp(const char* str1, const char* str2)
 {
-
     const int EqualConst = 0xFFFF;
-    __m128i Str1 = _mm_loadu_si64 ((void const*) str1);
-    __m128i Str2 = _mm_loadu_si64 ((void const*) str2);
-
+    __m128i Str1 = *((__m128i*) str1);
+    __m128i Str2 = *((__m128i*) str2);
 
     __m128i result = _mm_cmpeq_epi32 (Str1, Str2);
 
     if (_mm_movemask_epi8 (result) == EqualConst)
+    {
         return 0;
+    }
 
     return 1;
 }
@@ -348,13 +348,14 @@ ListElement* findElementByValue (List_t* list, Elem_t value)
         curElement = curElement->nextElementInd;
         if (fastStrCmp(curElement->element, value) == 0)
         {
+
             break;
         }
 
 	i++;
     }
 
-    if (i == list->size - 2)
+    if (i == list->size - 1)
     {
         return nullptr;
     }
