@@ -7,15 +7,15 @@ findElementByValue:
  	sub    rdi,0x1
 
  	je      .end
- 	movdqa xmm1,OWORD [rsi]
+ 	movdqa xmm1, OWORD [rsi]
  	xor    edx,edx
 
     .loop:
-        mov    rax,QWORD [rax+0x10]
+        mov    rax, QWORD [rax+0x10]
         movdqa xmm0,xmm1
-        mov    rcx,QWORD [rax]
-        pcmpeqd xmm0,OWORD [rcx]
-        pmovmskb ecx,xmm0
+        mov    rcx, QWORD [rax]
+        pcmpeqd xmm0, OWORD [rcx]
+        pmovmskb ecx, xmm0
         cmp    ecx,0xffff
         je     .end1
 
