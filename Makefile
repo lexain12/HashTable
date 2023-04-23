@@ -42,8 +42,8 @@ SOURCES  ?= main.cpp 			\
 	    ./Logs/Loglib.cpp
 
 # Configure sources dependencies.
-DEPENDS  ?= 				\
-	    ./HashTable/HashTable.hpp   \
+DEPENDS  ?= 				    \
+	    ./HashTable/HashTable.h \
 	    ./List/AltList.h 		\
 	    ./Logs/LogLib.h
 

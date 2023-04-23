@@ -1,16 +1,23 @@
+#include <cstdlib>
 #include <cstring>
 #include <stdio.h>
 #include <cassert>
 #include <immintrin.h>
 #include <emmintrin.h>
 
-#include "HashTable.hpp"
+#include "HashTable.h"
 
-void TableCtor(HashTable_t *hashTable, size_t (*HashFunc)(Elem_t), size_t NumOfLists)
+struct HashTable_t
 {
+    List_t** Table;
+    size_t (*HashFunc)(Elem_t str);
+    size_t NumOfLists;
+};
+
+HashTable_t* TableCtor(size_t (*HashFunc)(Elem_t), const size_t NumOfLists)
+{
+    HashTable_t* hashTable = (HashTable_t*) calloc(1, sizeof(*hashTable));
     assert (hashTable != nullptr);
-
-
 
     hashTable->NumOfLists = NumOfLists;
     hashTable->HashFunc   = HashFunc;
@@ -24,6 +31,7 @@ void TableCtor(HashTable_t *hashTable, size_t (*HashFunc)(Elem_t), size_t NumOfL
         listCtor(list);
         hashTable->Table[i] = list;
     }
+    return hashTable;
 }
 
 void TableDtor(HashTable_t* hashTable)
@@ -35,21 +43,19 @@ void TableDtor(HashTable_t* hashTable)
         listDtor (hashTable->Table[i]);
     }
 
-    hashTable->NumOfLists = 0;
-    hashTable->HashFunc   = nullptr;
     free (hashTable->Table);
 }
 
-void tableAdd (HashTable_t* hashTable, Elem_t element)
+ListElement* tableAdd (const HashTable_t* hashTable, const Elem_t element)
 {
     assert (hashTable != nullptr);
     assert (element   != nullptr);
 
     size_t ListNumber = (hashTable->HashFunc) (element) % hashTable->NumOfLists;
-    listHeadAdd(hashTable->Table[ListNumber], element);
+    return listHeadAdd(hashTable->Table[ListNumber], element);
 }
 
-ListElement* TableFind(HashTable_t* hashTable, Elem_t element)
+ListElement* TableFind(const HashTable_t* hashTable, const Elem_t element)
 {
     assert (hashTable != nullptr);
     assert (element   != nullptr);
@@ -59,5 +65,28 @@ ListElement* TableFind(HashTable_t* hashTable, Elem_t element)
 
     ListElement* retValue = findElementByValue(hashTable->Table[ListNumber], element);
     return retValue;
+}
+
+void getStatistics (const char* csvFileName, const HashTable_t* hashTable)
+{
+    assert (csvFileName != NULL);
+    assert (hashTable != NULL);
+
+    FILE* fileptr = fopen (csvFileName, "a");
+    assert (fileptr != nullptr);
+
+    for (size_t i = 0; i < hashTable->NumOfLists; ++i)
+    {
+	    fprintf (fileptr, "%lu ;", i);
+    }
+    fprintf (fileptr, "\n");
+
+    for (size_t i = 0; i < hashTable->NumOfLists; ++i)
+    {
+	    fprintf (fileptr, "%lu ;", hashTable->Table[i]->size);
+    }
+    fprintf (fileptr, "\n");
+
+    fclose (fileptr);
 }
 

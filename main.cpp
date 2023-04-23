@@ -2,17 +2,16 @@
 #include <cstdio>
 #include <cassert>
 #include <cstdlib>
-#include "HashTable/HashTable.hpp"
+#include "HashTable/HashTable.h"
 
 // This file must be started with space and be without \n to do this, use translator.py
-const char*  Filename = "HamletFormated.txt";
+const char* Filename = "HamletFormated.txt";
 
-size_t fileSize (FILE* file);
-size_t readFile(FILE* openedFile, char** dest);
-char** splitStrIntoWords (char* str, size_t strSize, char splitSymbol, size_t* retBufSize);
-void loadWordsIntoTable (char** buffer, HashTable_t* hashTable, size_t bufLength);
-void getStatistics (const char* csvFileName, HashTable_t* hashTable);
-void makeCsvFile (char** listOfWords, size_t numberOfWords);
+static size_t fileSize (FILE* file);
+static size_t readFile(FILE* openedFile, char** dest);
+static char** splitStrIntoWords (char* str, const size_t strSize, const char splitSymbol, size_t* retBufSize);
+void loadWordsIntoTable (char** buffer, const HashTable_t* hashTable, const size_t bufLength);
+void makeCsvFile (char** listOfWords, const size_t numberOfWords, size_t (**hashFuncs) (Elem_t elem));
 
 int main()
 {
@@ -25,14 +24,12 @@ int main()
     size_t numberOfWords = 0;
     char** listOfWords = splitStrIntoWords (stringOfWords, numberOfChars, ' ', &numberOfWords);
 
-    HashTable_t hashTable = {};
     const size_t numberOfLists = 80009;
-    TableCtor(&hashTable, &crc_32Fast, numberOfLists);
-    loadWordsIntoTable(listOfWords, &hashTable, numberOfWords);
+    HashTable_t* hashTable = TableCtor (&crc_32Fast, numberOfLists);
+    loadWordsIntoTable(listOfWords, hashTable, numberOfWords);
 
-    //makeCsvFile (listOfWords, numberOfWords);
-    //
-    //
+    //size_t (*HashFuncs[]) (Elem_t elem) = {&Always1Hash, &firstAsciiHash, &strlenHash, &asciiSumHash, &rolHash, &crc_32};
+    //makeCsvFile (listOfWords, numberOfWords, HashFuncs);
 
 #if 1
     const int numberOfTests = 1000;
@@ -40,50 +37,28 @@ int main()
     {
         for (size_t i = 0; i < numberOfWords; i++)
         {
-            TableFind(&hashTable, listOfWords[i]);
+            TableFind(hashTable, listOfWords[i]);
         }
     }
-
 #endif
 }
 
-void makeCsvFile (char** listOfWords, size_t numberOfWords)
+void makeCsvFile (char** listOfWords, const size_t numberOfWords, size_t (**hashFuncs) (Elem_t elem))
 {
     const size_t numberOfLists = 1000;
-
-    HashTable_t hashTable = {};
-    TableCtor (&hashTable, &Always1Hash, numberOfLists);
-    loadWordsIntoTable (listOfWords, &hashTable, numberOfWords);
-    getStatistics ("Stats.csv", &hashTable);
-
-    HashTable_t hashTable1 = {};
-    TableCtor (&hashTable1, &firstAsciiHash, numberOfLists);
-    loadWordsIntoTable (listOfWords, &hashTable1, numberOfWords);
-    getStatistics ("Stats.csv", &hashTable1);
-
-    HashTable_t hashTable2 = {};
-    TableCtor (&hashTable2, &strlenHash, numberOfLists);
-    loadWordsIntoTable (listOfWords, &hashTable2, numberOfWords);
-    getStatistics ("Stats.csv", &hashTable2);
-
-    HashTable_t hashTable3 = {};
-    TableCtor (&hashTable3, &rolHash, numberOfLists);
-    loadWordsIntoTable (listOfWords, &hashTable3, numberOfWords);
-    getStatistics ("Stats.csv", &hashTable3);
-
-    HashTable_t hashTable4 = {};
-    TableCtor (&hashTable4, &asciiSumHash, numberOfLists);
-    loadWordsIntoTable (listOfWords, &hashTable4, numberOfWords);
-    getStatistics ("Stats.csv", &hashTable4);
-
-    HashTable_t hashTable5 = {};
-    TableCtor (&hashTable5, &crc_32, numberOfLists);
-    loadWordsIntoTable (listOfWords, &hashTable5, numberOfWords);
-    getStatistics ("Stats.csv", &hashTable5);
+    for (int i = 0; hashFuncs[i] != NULL; i++)
+    {
+        HashTable_t* hashTable = TableCtor(hashFuncs[i], numberOfLists);
+        loadWordsIntoTable(listOfWords, hashTable, numberOfWords);
+        getStatistics("Stats.csv", hashTable);
+        TableDtor(hashTable);
+    }
 }
 
-size_t fileSize (FILE* file)
+static size_t fileSize (FILE* file)
 {
+    assert (file != NULL);
+
     fseek(file, 0l, SEEK_END);
     size_t size = (size_t) ftell(file);
     fseek(file, 0l, SEEK_SET);
@@ -91,9 +66,10 @@ size_t fileSize (FILE* file)
     return size;
 }
 
-size_t readFile(FILE* openedFile, char** dest)
+static size_t readFile(FILE* openedFile, char** dest)
 {
-    assert (openedFile != nullptr);
+    assert (openedFile != NULL);
+    assert (dest != NULL);
 
     size_t numberOfChars = fileSize(openedFile);
 
@@ -106,9 +82,9 @@ size_t readFile(FILE* openedFile, char** dest)
     return numberOfChars;
 }
 
-char** splitStrIntoWords (char* str, size_t strSize, char splitSymbol, size_t* retBufSize)
+char** splitStrIntoWords (char* str, const size_t strSize, const char splitSymbol, size_t* retBufSize)
 {
-    assert (str != nullptr);
+    assert (str != NULL);
     const size_t constStrLength = 16;
 
     size_t maxBufSize = 100;
@@ -122,7 +98,7 @@ char** splitStrIntoWords (char* str, size_t strSize, char splitSymbol, size_t* r
 	{
 	    if (curRetBufLength > maxBufSize - 10 )
 	    {
-            maxBufSize += 20;
+            maxBufSize *= 2;
             retBuf = (char**) realloc(retBuf, (maxBufSize) * sizeof (char*));
             assert (retBuf != nullptr);
 	    }
@@ -139,31 +115,14 @@ char** splitStrIntoWords (char* str, size_t strSize, char splitSymbol, size_t* r
     return retBuf;
 }
 
-void loadWordsIntoTable (char** buffer, HashTable_t* hashTable, size_t bufLength)
+void loadWordsIntoTable (char** buffer, const HashTable_t* hashTable, const size_t bufLength)
 {
+    assert (buffer != NULL);
+    assert (hashTable != NULL);
+
     for (size_t i = 0; i < bufLength; ++i)
     {
-	tableAdd (hashTable, buffer[i]);
+        tableAdd (hashTable, buffer[i]);
     }
-}
-
-void getStatistics (const char* csvFileName, HashTable_t* hashTable)
-{
-    FILE* fileptr = fopen (csvFileName, "a");
-    assert (fileptr != nullptr);
-
-    for (size_t i = 0; i < hashTable->NumOfLists; ++i)
-    {
-	    fprintf (fileptr, "%lu ;", i);
-    }
-    fprintf (fileptr, "\n");
-
-    for (size_t i = 0; i < hashTable->NumOfLists; ++i)
-    {
-	    fprintf (fileptr, "%lu ;", hashTable->Table[i]->size);
-    }
-    fprintf (fileptr, "\n");
-
-    fclose (fileptr);
 }
 

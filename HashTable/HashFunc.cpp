@@ -1,7 +1,7 @@
 #include <cstring>
 #include <cstdint>
 
-#include "HashTable.hpp"
+#include "HashTable.h"
 
 size_t Always1Hash (Elem_t element)
 {
@@ -24,19 +24,19 @@ size_t asciiSumHash (Elem_t element)
 
     for (size_t index = 0; element[index] != '\0'; ++index)
     {
-	sum += (unsigned long) element[index];
+        sum += (unsigned long) element[index];
     }
     return sum;
 }
 
-size_t myRor(size_t num, size_t shift)
+static unsigned int myRor(unsigned int num)
 {
-    return (num >> shift) | (num << (32 - shift));
+    return (num >> 1) | (num << 31);
 }
 
-unsigned int myRol(unsigned int num, unsigned int shift)
+static unsigned int myRol(unsigned int num)
 {
-    return (num << shift) | (num >> (32 - shift));
+    return (num << 1) | (num >> 31);
 }
 
 size_t rolHash (Elem_t element)
@@ -46,7 +46,7 @@ size_t rolHash (Elem_t element)
 
     while (element[index])
     {
-	mask = myRol(mask, 1) ^ (unsigned int) element[index];
+	mask = myRol(mask) ^ (unsigned int) element[index];
 	index += 1;
     }
     return mask;
@@ -59,7 +59,7 @@ size_t rorHash (Elem_t element)
 
     while (element[index])
     {
-	mask = myRor(mask, 1) ^ (unsigned long) element[index];
+	mask = myRor(mask) ^ (unsigned long) element[index];
 	index += 1;
     }
     return mask;

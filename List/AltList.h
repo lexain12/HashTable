@@ -45,7 +45,6 @@ void listDump (List_t* list, const char* str, ...);
 int  listVerify (List_t* list);
 size_t logicalNumberToPhysical (List_t* list, ListElement* anchorElement);
 extern "C" ListElement* findElementByValue (List_t* list, Elem_t value);
-int fastStrCmp(const char* str1, const char* str2);
 void myGraph (List_t* list);
 
 ListElement* listInsertPrev (List_t* list, ListElement* anchorElement, Elem_t element);
