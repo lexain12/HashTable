@@ -1,6 +1,7 @@
 //--------------------------------------------------------
 // This file is my old code, that had a lot of warnings,
 // but I checked them
+#include <cstdint>
 #include <cstdlib>
 #pragma GCC diagnostic ignored "-Wsign-conversion"
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
@@ -49,17 +50,13 @@ int listCtor (List_t* list)
 void listDtor (List_t* list)
 {
     assert (list != nullptr);
-
-    list->size     = 0;
-
-    list->nullElement->element        = 0;
-    list->nullElement->prevElementInd = 0;
-    list->nullElement->nextElementInd = 0;
-
-    free(list->nullElement);
-    list->nullElement = nullptr;
-
-    return;
+    ListElement* cur  = list->nullElement;
+    for (size_t i = 0; i < list->size; i++)
+    {
+        ListElement* next = cur->nextElementInd;
+        free(cur);
+        cur = next;
+    }
 }
 
 ListElement* listInsertPrev (List_t* list, ListElement* anchorElement, Elem_t element)
@@ -105,12 +102,11 @@ ListElement* listTailAdd (List_t* list, Elem_t element)
 
 ListElement* listInsertAfter (List_t* list, ListElement* anchorIndex, Elem_t element)
 {
-    if (list->status |= listVerify (list))
-        listDump (list, "Error in listInsertAfter function, element: " Format_ ", before: %lu\n", element, anchorIndex);
-    {
-    }
-
     assert (list != nullptr);
+    if (list->status |= listVerify (list))
+    {
+        listDump (list, "Error in listInsertAfter function, element: " Format_ ", before: %lu\n", element, anchorIndex);
+    }
 
     return listInsertPrev (list, anchorIndex->nextElementInd, element);
 }
@@ -279,8 +275,7 @@ int listVerify (List_t* list)
 {
     assert (list != nullptr);
 
-    size_t epsiloh = -1;
-    epsiloh       /=  2;
+    size_t epsiloh = SIZE_MAX;
 
     if (list)
     {

@@ -4,13 +4,13 @@ typedef char* Elem_t;
 
 const char GraphFile[20] = "GraphFileAlt.txt";
 
-enum Errors 
+enum Errors
 {
     noErrors             = 0 << 0,
     listptrError         = 1 << 0,
     capacityError        = 1 << 1,
     dataError            = 1 << 2,
-    sizeError            = 1 << 3,  
+    sizeError            = 1 << 3,
     sizeAndCapacityError = 1 << 4,
     listResizeUpError    = 1 << 5,
     memAllocError        = 1 << 6,
