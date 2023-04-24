@@ -46,8 +46,8 @@ size_t rolHash (Elem_t element)
 
     while (element[index])
     {
-	mask = myRol(mask) ^ (unsigned int) element[index];
-	index += 1;
+        mask = myRol(mask) ^ (unsigned int) element[index];
+        index += 1;
     }
     return mask;
 }
@@ -59,8 +59,8 @@ size_t rorHash (Elem_t element)
 
     while (element[index])
     {
-	mask = myRor(mask) ^ (unsigned long) element[index];
-	index += 1;
+        mask = myRor(mask) ^ (unsigned long) element[index];
+        index += 1;
     }
     return mask;
 }

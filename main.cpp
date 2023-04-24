@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cassert>
 #include <cstdlib>
+
 #include "HashTable/HashTable.h"
 
 // This file must be started with space and be without \n to do this, use translator.py
@@ -24,11 +25,11 @@ int main()
     char** listOfWords = splitStrIntoWords (stringOfWords, numberOfChars, ' ', &numberOfWords);
 
     const size_t numberOfLists = 80009;
-    HashTable_t* hashTable = TableCtor (&crc_32Fast, numberOfLists);
+    HashTable_t* hashTable = TableCtor (crc_32, numberOfLists);
     loadWordsIntoTable(listOfWords, hashTable, numberOfWords);
 
-    //size_t (*HashFuncs[]) (Elem_t elem) = {&Always1Hash, &firstAsciiHash, &strlenHash, &asciiSumHash, &rolHash, &crc_32};
-    //makeCsvFile (listOfWords, numberOfWords, HashFuncs);
+    size_t (*HashFuncs[]) (Elem_t elem) = {&Always1Hash, &firstAsciiHash, &strlenHash, &asciiSumHash, &rolHash, &rorHash, &crc_32};
+    makeCsvFile (listOfWords, numberOfWords, HashFuncs);
 
 #if 1
     const int numberOfTests = 1000;
@@ -44,7 +45,7 @@ int main()
 
 void makeCsvFile (char** listOfWords, const size_t numberOfWords, size_t (**hashFuncs) (Elem_t elem))
 {
-    const size_t numberOfLists = 1000;
+    const size_t numberOfLists = 5003;
     for (int i = 0; hashFuncs[i] != NULL; i++)
     {
         HashTable_t* hashTable = TableCtor(hashFuncs[i], numberOfLists);
@@ -95,24 +96,24 @@ char** splitStrIntoWords (char* str, const size_t strSize, const char splitSymbo
     size_t curRetBufLength = 0;
     for (size_t i = 1; i < strSize; ++i)
     {
-	if (str[i - 1] == splitSymbol)
-	{
-	    if (curRetBufLength > maxBufSize - 10 )
-	    {
-            maxBufSize *= 2;
-            retBuf = (char**) realloc(retBuf, (maxBufSize) * sizeof (char*));
-            assert (retBuf != nullptr);
-	    }
+        if (str[i - 1] == splitSymbol)
+        {
+            if (curRetBufLength > maxBufSize - 10 )
+            {
+                maxBufSize *= 2;
+                retBuf = (char**) realloc(retBuf, (maxBufSize) * sizeof (char*));
+                assert (retBuf != nullptr);
+            }
 
-	    int charsReaded = 0;
-	    sscanf (str + i, "%*s%n ", &charsReaded);
+            int charsReaded = 0;
+            sscanf (str + i, "%*s%n ", &charsReaded);
 
-	    retBuf[curRetBufLength] = (char*) calloc ((size_t) charsReaded, sizeof (char));
-	    assert (retBuf[curRetBufLength] != nullptr);
-	    sscanf (str + i, "%s ", retBuf[curRetBufLength]);
+            retBuf[curRetBufLength] = (char*) calloc ((size_t) charsReaded, sizeof (char));
+            assert (retBuf[curRetBufLength] != nullptr);
+            sscanf (str + i, "%s ", retBuf[curRetBufLength]);
 
-	    curRetBufLength += 1;
-	}
+            curRetBufLength += 1;
+        }
     }
 
     *retBufSize = curRetBufLength;
