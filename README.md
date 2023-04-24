@@ -126,8 +126,10 @@ size_t rolHash (Elem_t element)
 
 Дисперсия: 5
 </details>
+
 ### RorHash 
-Такая же как и ```RolHash```, только со сдвигом вправо.
+
+Такая же как и ```RolHash``` , только со сдвигом вправо.
 
 ```
 size_t rorHash (Elem_t element)
@@ -150,7 +152,9 @@ size_t rorHash (Elem_t element)
 <img src="./src/Stats/ror_5000.png">
 
 </details>
+
 ### Crc32
+
 crc32 имеет следующую реализацию:
 ```
 size_t crc_32 (Elem_t element)
