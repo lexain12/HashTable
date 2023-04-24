@@ -97,7 +97,7 @@ size_t asciiSumHash (Elem_t element)
 <details>
 <summary>График заселенности хеш-фунции</summary>
 
-<img src="./src/Stats/AsciiSum.png">
+<img src="./src/Stats/asciiSum_5000.png">
 
 Дисперсия: 90
 </details>
@@ -122,11 +122,34 @@ size_t rolHash (Elem_t element)
 <details>
 <summary>График заселенности хеш-фунции</summary>
 
-<img src="./src/Stats/Rol.png">
+<img src="./src/Stats/rolHash_5000.png">
 
-Дисперсия: 26
+Дисперсия: 5
 </details>
+### RorHash 
+Такая же как и ```RolHash```, только со сдвигом вправо.
 
+```
+size_t rorHash (Elem_t element)
+{
+    size_t mask  = 0;
+    size_t index = 0;
+
+    while (element[index])
+    {
+	mask = myRor(mask) ^ (unsigned long) element[index];
+	index += 1;
+    }
+    return mask;
+}
+```
+
+<details>
+<summary>График заселенности</summary>
+
+<img src="./src/Stats/ror_5000.png">
+
+</details>
 ### Crc32
 crc32 имеет следующую реализацию:
 ```
@@ -153,21 +176,21 @@ size_t crc_32 (Elem_t element)
 <details>
 <summary>График заселенности хеш-фунции</summary>
 
-<img src="./src/Stats/crc32.png">
+<img src="./src/Stats/crc32_5000.png">
 
 
-Дисперсия: 18
+Дисперсия: 4
 </details>
 
 ## Вывод
 Заселенность трех лучших функций:
 
 
-<img src="./src/Stats/Compare.png">
+<img src="./src/Stats/top3_5000.png">
 Дисперсия трех лучший функций:
 
 
-<img src="./src/Stats/Dispersion.png">
+<img src="./src/Stats/newDispersion.png">
 
 
 По итогам всех измерения видим, что лучшая из всех функций это - crc32. Ее мы и выберем для последующей оптимизации хеш-таблицы, огромным плюсом будет, то что у нее есть ассемблерный аналог.
