@@ -94,21 +94,21 @@ char** splitStrIntoWords (char* str, const size_t strSize, const char splitSymbo
     size_t curRetBufLength = 0;
     for (size_t i = 1; i < strSize; ++i)
     {
-	if (str[i - 1] == splitSymbol)
-	{
-	    if (curRetBufLength > maxBufSize - 10 )
-	    {
-            maxBufSize *= 2;
-            retBuf = (char**) realloc(retBuf, (maxBufSize) * sizeof (char*));
-            assert (retBuf != nullptr);
-	    }
+        if (str[i - 1] == splitSymbol)
+        {
+            if (curRetBufLength > maxBufSize - 10 )
+            {
+                maxBufSize *= 2;
+                retBuf = (char**) realloc(retBuf, (maxBufSize) * sizeof (char*));
+                assert (retBuf != nullptr);
+            }
 
-	    retBuf[curRetBufLength] = (char*) calloc (constStrLength + 1, sizeof (char)); // + 1 is space for '\0'
-	    assert (retBuf[curRetBufLength] != nullptr);
-	    sscanf (str + i, "%s ", retBuf[curRetBufLength]);
+            retBuf[curRetBufLength] = (char*) calloc (constStrLength + 1, sizeof (char)); // + 1 is space for '\0'
+            assert (retBuf[curRetBufLength] != nullptr);
+            sscanf (str + i, "%s ", retBuf[curRetBufLength]);
 
-	    curRetBufLength += 1;
-	}
+            curRetBufLength += 1;
+        }
     }
 
     *retBufSize = curRetBufLength;
